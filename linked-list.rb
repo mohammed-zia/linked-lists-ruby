@@ -91,13 +91,59 @@ class LinkedList
     current_node = @head
     @count.times do
       unless current_node == nil
-        print "( #{current_node.value} ) - > " 
+        print "( #{current_node.value}, #{current_node.index} ) - > " 
         current_node = current_node.next
       else
         print "nil \n"
       end
     end
   end
+
+  def insert_at(value, index)
+    current_node = @head
+    (index - 1).times do
+      current_node = current_node.next
+    end
+    node_to_have_addr_changed = current_node
+
+    current_node = @head
+    index.times do
+      current_node = current_node.next
+    end
+    node_to_be_shifted_right = current_node
+    current_node = Node.new(value, index)
+    @count += 1
+    node_to_have_addr_changed.next_addr = current_node
+    current_node.next_addr = node_to_be_shifted_right
+    current_node = current_node.next
+    until current_node == nil
+      current_node.index += 1
+      current_node = current_node.next
+    end      
+  end
+
+  def remove_at(index)
+    current_node = @head
+    (index - 1).times do
+      current_node = current_node.next
+    end
+    node_to_have_addr_changed = current_node
+
+    current_node = @head
+    index.times do
+      current_node = current_node.next
+    end
+    node_to_be_removed = current_node
+    node_to_have_addr_changed.next_addr = current_node.next_addr
+    current_node = nil
+    @count -= 1
+    current_node = node_to_have_addr_changed.next
+    until current_node == nil
+      current_node.index -= 1
+      current_node = current_node.next
+    end   
+  end
+    
 end
 
 class Node
@@ -132,4 +178,8 @@ p "Tail next addr after pop: #{tail.next_addr}"
 p "Tail val after pop: #{tail.value}"
 p list.contains?("g")
 p list.find("a")
+list.to_s
+list.insert_at("g", 2)
+list.to_s
+list.remove_at(4)
 list.to_s
